@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ApiError } from "../api/client";
 import { getRecommendations } from "../api/recommendations";
 import type { RecommendationResponse, UserPreferences } from "../types";
@@ -14,6 +14,9 @@ export interface UseRecommendationsResult {
    * having to parse this themselves. */
   errorDetails: unknown;
   submit: (preferences: UserPreferences) => Promise<void>;
+  /** Re-sends the last submitted preferences unchanged — for an error
+   * state's "Retry" button. A no-op if nothing has been submitted yet. */
+  retry: () => Promise<void>;
 }
 
 /**
@@ -40,8 +43,10 @@ export function useRecommendations(): UseRecommendationsResult {
   const [data, setData] = useState<RecommendationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<unknown>(undefined);
+  const lastPreferencesRef = useRef<UserPreferences | null>(null);
 
   const submit = useCallback(async (preferences: UserPreferences) => {
+    lastPreferencesRef.current = preferences;
     setStatus("loading");
     setError(null);
     setErrorDetails(undefined);
@@ -60,5 +65,12 @@ export function useRecommendations(): UseRecommendationsResult {
     }
   }, []);
 
-  return { status, data, error, errorDetails, submit };
+  const retry = useCallback(() => {
+    if (!lastPreferencesRef.current) {
+      return Promise.resolve();
+    }
+    return submit(lastPreferencesRef.current);
+  }, [submit]);
+
+  return { status, data, error, errorDetails, submit, retry };
 }

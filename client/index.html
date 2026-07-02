@@ -4,6 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Car AI Advisor</title>
+    <script>
+      // Sets the theme attribute before any CSS is parsed, so the correct
+      // theme paints immediately instead of flashing light-then-dark.
+      // The storage key here must match THEME_STORAGE_KEY in
+      // src/hooks/useTheme.ts.
+      (function () {
+        try {
+          var storageKey = "car-ai-advisor-theme";
+          var stored = localStorage.getItem(storageKey);
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (error) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

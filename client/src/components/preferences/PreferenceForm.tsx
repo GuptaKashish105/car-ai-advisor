@@ -179,6 +179,7 @@ export function PreferenceForm({ onSubmit, isSubmitting = false }: PreferenceFor
       </fieldset>
 
       <button type="submit" className="preference-form__submit" disabled={isSubmitting}>
+        {isSubmitting && <span className="spinner" aria-hidden="true" />}
         {isSubmitting ? "Finding your shortlist…" : "Find my shortlist"}
       </button>
     </form>

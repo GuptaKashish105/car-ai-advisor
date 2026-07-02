@@ -1,0 +1,207 @@
+.results-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Success "banner" — same tinted-accent language as the error state below,
+   just in the positive-confirmation color, for visual parity between the
+   two outcomes a user actually cares about. */
+.results-section__intro {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-success-soft);
+  border: 1px solid var(--color-success);
+  border-radius: var(--radius-md);
+  animation: card-enter var(--transition-base) both;
+  transition:
+    background-color var(--transition-theme),
+    border-color var(--transition-theme);
+}
+
+.results-section__icon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  color: var(--color-success);
+}
+
+.results-section__heading {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.01em;
+}
+
+.results-section__subheading {
+  margin: 0.15rem 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+}
+
+.results-section__loading-label {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.results-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+/* Friendly status card shared by the empty and error states */
+
+.results-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-1);
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  animation: card-enter var(--transition-base) both;
+  transition:
+    background-color var(--transition-theme),
+    border-color var(--transition-theme);
+}
+
+.results-status__icon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.results-status__heading {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.results-status__message {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+.results-status--error {
+  border-color: var(--color-danger);
+  background-color: var(--color-danger-soft);
+}
+
+.results-status--error .results-status__icon,
+.results-status--error .results-status__heading {
+  color: var(--color-danger);
+}
+
+.results-status__retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: var(--space-2);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  padding: 0.55rem 1.2rem;
+  border: 1.5px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-danger);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.results-status__retry:hover {
+  background-color: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+.results-status__retry:active {
+  transform: scale(0.96);
+}
+
+.results-status__retry:focus-visible {
+  outline: 2px solid var(--color-danger);
+  outline-offset: 2px;
+}
+
+.results-status__button-icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* Skeleton loaders */
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton {
+  background-color: var(--color-border);
+  border-radius: var(--radius-sm);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  transition: background-color var(--transition-theme);
+}
+
+.skeleton--circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton--line {
+  height: 0.85rem;
+}
+
+.skeleton--block {
+  height: 2.4rem;
+  width: 100%;
+}
+
+.recommendation-card--skeleton {
+  cursor: default;
+}
+
+.recommendation-card--skeleton:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.recommendation-card__title--skeleton {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+}
+
+@media (max-width: 640px) {
+  .results-section__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-status {
+    padding: var(--space-4) var(--space-2);
+  }
+}

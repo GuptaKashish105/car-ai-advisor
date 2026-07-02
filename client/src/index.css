@@ -1,19 +1,99 @@
-:root {
-  --color-bg: #f7f7f8;
-  --color-surface: #ffffff;
-  --color-border: #e2e2e6;
-  --color-text: #1a1a1f;
-  --color-text-muted: #5c5c66;
-  --color-primary: #2f6fed;
-  --max-content-width: 960px;
+/* =========================================================================
+   Design tokens — light theme (default) and dark theme overrides.
+   Every component stylesheet in this app reads colors, spacing, radius,
+   shadows, and transitions exclusively through these custom properties.
+   Dark mode therefore requires zero changes to component CSS: redefining
+   the tokens under `[data-theme="dark"]` re-themes the whole app through
+   the cascade. See hooks/useTheme.ts for how `data-theme` gets set.
+   ========================================================================= */
 
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
+:root {
+  /* Color — light */
+  --color-bg: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-surface-hover: #fafbfe;
+  --color-border: #e3e4ea;
+  --color-border-strong: #c9cbd6;
+  --color-text: #16181d;
+  --color-text-muted: #666b78;
+  --color-primary: #2f6fed;
+  --color-primary-dark: #1f52c4;
+  --color-primary-soft: #e8effe;
+  --color-on-primary: #ffffff;
+  --color-danger: #d92d20;
+  --color-danger-soft: #fdf1f0;
+  --color-success: #12805c;
+  --color-success-soft: #e7f7f1;
+
   color-scheme: light;
+
+  /* Layout */
+  --max-content-width: 1040px;
+
+  /* Spacing scale */
+  --space-1: 0.4rem;
+  --space-2: 0.75rem;
+  --space-3: 1.25rem;
+  --space-4: 1.75rem;
+  --space-5: 2.5rem;
+  --space-6: 3.5rem;
+
+  /* Typography scale */
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-base: 1rem;
+  --text-md: 1.05rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.9rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 3px rgba(22, 24, 29, 0.07);
+  --shadow-md: 0 8px 20px rgba(22, 24, 29, 0.09);
+  --shadow-lg: 0 20px 45px rgba(22, 24, 29, 0.14);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-theme: 240ms ease;
+
+  font-family: var(--font-sans);
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #0d0f13;
+  --color-surface: #171a21;
+  --color-surface-hover: #1d212a;
+  --color-border: #2a2e38;
+  --color-border-strong: #3c4250;
+  --color-text: #edeef2;
+  --color-text-muted: #9aa1b0;
+  --color-primary: #4c7cf0;
+  --color-primary-dark: #6d93ff;
+  --color-primary-soft: #182544;
+  --color-on-primary: #ffffff;
+  --color-danger: #f1706a;
+  --color-danger-soft: #3a1b19;
+  --color-success: #34d399;
+  --color-success-soft: #113328;
+
+  color-scheme: dark;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 55px rgba(0, 0, 0, 0.55);
 }
 
 * {
@@ -26,17 +106,93 @@ body,
   height: 100%;
 }
 
+html {
+  color-scheme: light dark;
+}
+
 body {
   margin: 0;
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color var(--transition-theme),
+    color var(--transition-theme);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-text);
+  line-height: 1.25;
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.015em;
+}
+
+h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Shared by any inline loading spinner (form submit button, retry button). */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  animation: spin 700ms linear infinite;
+}
+
+/* A single, consistent focus treatment for every interactive element in the
+   app — inputs/buttons/chips/sliders may layer on a softer glow of their
+   own, but nothing in the app can end up with NO visible focus indicator. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Visually hides content while keeping it available to assistive tech —
+   used for status text alongside decorative-only loading/empty/error icons. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .app-shell {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  background-color: var(--color-bg);
+  transition: background-color var(--transition-theme);
 }
 
 .app-main {
@@ -46,22 +202,38 @@ body {
 .page-container {
   max-width: var(--max-content-width);
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: var(--space-6) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
 }
 
-/* Temporary: styles the debug panel standing in for the real results UI. */
-.debug-panel {
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  border: 1px dashed var(--color-border);
-  border-radius: 10px;
+@media (max-width: 1024px) {
+  .page-container {
+    padding: var(--space-5) var(--space-3);
+    gap: var(--space-5);
+  }
 }
 
-.debug-panel pre {
-  max-width: 100%;
-  overflow-x: auto;
-  background-color: var(--color-bg);
-  padding: 1rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
+@media (max-width: 900px) {
+  .page-container {
+    padding: var(--space-4) var(--space-3);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 560px) {
+  .page-container {
+    padding: var(--space-3) var(--space-2);
+    gap: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
