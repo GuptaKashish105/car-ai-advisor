@@ -57,6 +57,11 @@
   opacity: 0.92;
 }
 
+.preference-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (max-width: 640px) {
   .preference-form {
     padding: 1.25rem;

@@ -66,9 +66,13 @@ interface PreferenceFormProps {
    * component has no idea what happens next (API call, results view) —
    * that's the caller's responsibility. */
   onSubmit: (preferences: UserPreferences) => void;
+  /** Disables the submit button and swaps its label while a request from a
+   * previous submission is in flight. Owned by the caller, not this form —
+   * it has no idea a network request even exists. */
+  isSubmitting?: boolean;
 }
 
-export function PreferenceForm({ onSubmit }: PreferenceFormProps) {
+export function PreferenceForm({ onSubmit, isSubmitting = false }: PreferenceFormProps) {
   const formId = useId();
   const [values, setValues] = useState<PreferenceFormValues>(INITIAL_VALUES);
   const [errors, setErrors] = useState<PreferenceFormErrors>({});
@@ -174,8 +178,8 @@ export function PreferenceForm({ onSubmit }: PreferenceFormProps) {
         </div>
       </fieldset>
 
-      <button type="submit" className="preference-form__submit">
-        Find my shortlist
+      <button type="submit" className="preference-form__submit" disabled={isSubmitting}>
+        {isSubmitting ? "Finding your shortlist…" : "Find my shortlist"}
       </button>
     </form>
   );

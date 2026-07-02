@@ -7,22 +7,40 @@
  */
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
+/**
+ * Thrown whenever the server responded but with a non-2xx status — as
+ * opposed to `fetch` itself rejecting (network failure, server unreachable),
+ * which surfaces as a plain `TypeError`. Callers can use `instanceof ApiError`
+ * to tell "the server rejected this request" (400 validation, 500, etc.)
+ * apart from "the request never reached a server at all".
+ */
 export class ApiError extends Error {
   readonly status: number;
+  /** Raw error payload from the server, e.g. Zod's `flatten()` output on a
+   * 400. Untyped here since its shape is endpoint-specific; callers that
+   * care about a particular endpoint's error shape can cast it themselves. */
+  readonly details?: unknown;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, details?: unknown) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.details = details;
   }
 }
 
-async function extractErrorMessage(response: Response): Promise<string> {
+interface ErrorResponseBody {
+  message: string;
+  details?: unknown;
+}
+
+async function extractErrorInfo(response: Response): Promise<ErrorResponseBody> {
   const body: unknown = await response.json().catch(() => null);
   if (body && typeof body === "object" && "error" in body && typeof body.error === "string") {
-    return body.error;
+    const details = "details" in body ? body.details : undefined;
+    return { message: body.error, details };
   }
-  return `Request failed with status ${response.status}`;
+  return { message: `Request failed with status ${response.status}` };
 }
 
 /**
@@ -38,7 +56,8 @@ export async function postJson<TResponse, TBody>(path: string, body: TBody): Pro
   });
 
   if (!response.ok) {
-    throw new ApiError(response.status, await extractErrorMessage(response));
+    const { message, details } = await extractErrorInfo(response);
+    throw new ApiError(response.status, message, details);
   }
 
   return (await response.json()) as TResponse;

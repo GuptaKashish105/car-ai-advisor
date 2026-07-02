@@ -48,3 +48,20 @@ body {
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
+
+/* Temporary: styles the debug panel standing in for the real results UI. */
+.debug-panel {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 10px;
+}
+
+.debug-panel pre {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: var(--color-bg);
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
