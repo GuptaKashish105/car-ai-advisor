@@ -6,9 +6,13 @@ Built as a demonstration of production-grade full-stack engineering: a clean sep
 
 ---
 
+🔗 **Live Demo:**  
+https://car-ai-advisor-client.vercel.app/
+
+---
+
 ## Table of Contents
 
-- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
@@ -22,16 +26,6 @@ Built as a demonstration of production-grade full-stack engineering: a clean sep
 - [Troubleshooting](#troubleshooting)
 - [Future Improvements](#future-improvements)
 - [License](#license)
-
----
-
-## Screenshots
-
-> Placeholder — add real screenshots before sharing this repo publicly. Recommended: light mode form, dark mode results grid, and the mobile layout.
-
-| Preference form (light) | Shortlist results (dark) | Mobile |
-|---|---|---|
-| `docs/screenshots/form-light.png` | `docs/screenshots/results-dark.png` | `docs/screenshots/mobile.png` |
 
 ---
 
