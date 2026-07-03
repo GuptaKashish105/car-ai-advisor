@@ -8,7 +8,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT ?? 3001;
 
-app.use(cors());
+// CORS_ORIGIN restricts the API to specific deployed frontend origin(s) in
+// production (comma-separated if there's more than one, e.g. a Vercel
+// production domain plus preview deployments). Left unset, `cors()` falls
+// back to its permissive default (any origin) — fine for local development,
+// where there's nothing sensitive behind this API to protect.
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors(allowedOrigins && allowedOrigins.length > 0 ? { origin: allowedOrigins } : undefined));
 app.use(express.json());
 
 app.get("/health", (_req, res) => {

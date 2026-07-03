@@ -7,6 +7,20 @@
  */
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
+// A production build with no VITE_API_BASE_URL set falls back to the
+// relative "/api" — correct for local dev (Vite's proxy) or a same-origin
+// deployment, but almost certainly wrong for a static host like Vercel with
+// no backend of its own to proxy to. This only ever logs; it doesn't change
+// behavior, since a same-origin production setup is still legitimate.
+if (import.meta.env.PROD && !import.meta.env.VITE_API_BASE_URL) {
+  console.warn(
+    "[api/client] VITE_API_BASE_URL is not set. Falling back to the relative " +
+      '"/api" — if this build is deployed separately from its backend (e.g. ' +
+      "Vercel + Render), API requests will fail. Set VITE_API_BASE_URL to the " +
+      "deployed backend's URL (including the /api prefix) at build time.",
+  );
+}
+
 /**
  * Thrown whenever the server responded but with a non-2xx status — as
  * opposed to `fetch` itself rejecting (network failure, server unreachable),
